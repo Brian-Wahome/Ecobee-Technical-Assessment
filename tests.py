@@ -3,7 +3,7 @@ import unittest
 import random
 import unittest
 from unittest.mock import patch
-from main import get_posts, select_post
+from main import get_posts, select_post, view_post_comments
 
 
 class TestAPIFeatures(unittest.TestCase):
@@ -59,6 +59,22 @@ class TestAPIFeatures(unittest.TestCase):
         result = select_post(id)
         self.assertNotEqual(result, "Post Id does not exist")
         self.assertEqual(result["id"], test_id)
+
+    @patch("requests.get")
+    def test_view_post_comments(self, mock_get):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = [{"postId": 1, "id": 1, "Text": "Text 1", },
+                                      {"postId": 1, "id": 2, "Text": "Text 2", },
+                                      {"postId": 3, "id": 3, "Text": "Text 3", }]
+
+        result = view_post_comments(1)
+
+        # Check to ensure comments are present
+        self.assertNotEqual(result, "No Comments")
+        # Checks to ensure comments are for the post id selected
+        self.assertEqual(result[0]['postId'], 1)
+        self.assertEqual(result[1]['postId'], 1)
+        self.assertEqual(result[2]['postId'], 3)
 
 
 if __name__ == '__main__':
