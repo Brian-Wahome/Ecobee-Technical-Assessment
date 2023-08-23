@@ -3,7 +3,7 @@ import unittest
 import random
 import unittest
 from unittest.mock import patch
-from main import get_posts
+from main import get_posts, select_post
 
 
 class TestAPIFeatures(unittest.TestCase):
@@ -47,6 +47,18 @@ class TestAPIFeatures(unittest.TestCase):
         ]
         # expected_result = mock_response
         self.assertEqual(result, expected_result)
+
+    @patch("requests.get")
+    def test_select_post(self, mock_get):
+        mock_response = mock_get.return_value
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"userId": 11, "id": 11, "title": "Title 10", "body": "Body 10"}
+
+        # Calling the select_post function
+        test_id = 11
+        result = select_post(id)
+        self.assertNotEqual(result, "Post Id does not exist")
+        self.assertEqual(result["id"], test_id)
 
 
 if __name__ == '__main__':
