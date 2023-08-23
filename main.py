@@ -15,3 +15,12 @@ def select_post(post_id):
     if response.status_code == 200:
         return response.json()
     return "Post Id does not exist"
+
+
+def view_post_comments(post_id):
+    response = requests.get(f"{API_URL}/posts/{post_id}/comments")
+    if response.status_code == 200:
+        return response.json()
+    return "No comments"
+
+
