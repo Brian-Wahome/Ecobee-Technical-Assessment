@@ -53,7 +53,8 @@ class TestAPIFeatures(unittest.TestCase):
         # expected_result = mock_response
         self.assertEqual(result, expected_result)
         #check if output is not similar
-        self.assertNotEqual(result, expected_result_2, "Items with different output expected but items have similar output")
+        self.assertNotEqual(result, expected_result_2, "Items with different output expected but items have similar "
+                                                       "output")
 
     @patch("requests.get")
     def test_select_post(self, mock_get):
