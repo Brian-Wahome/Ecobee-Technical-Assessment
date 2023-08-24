@@ -24,3 +24,14 @@ def view_post_comments(post_id):
     return "No comments"
 
 
+def post_comment(post_id, name, email, body):
+    comment_id = 500
+    comment = {
+        "id": comment_id+1,
+        "name": name,
+        "email": email,
+        "body": body
+    }
+    response = requests.post(f"{API_URL}/posts/{post_id}/comments", json=comment)
+
+    return response.status_code == 201
