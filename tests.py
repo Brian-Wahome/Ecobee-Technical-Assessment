@@ -52,7 +52,7 @@ class TestAPIFeatures(unittest.TestCase):
         ]
         # expected_result = mock_response
         self.assertEqual(result, expected_result)
-        #check if output is not similar
+        # check if output is not similar
         self.assertNotEqual(result, expected_result_2, "Items with different output expected but items have similar "
                                                        "output")
 
@@ -107,6 +107,19 @@ class TestAPIFeatures(unittest.TestCase):
         self.assertEqual(len(matching_posts), 2)
         # Check if titles are similar
         self.assertEqual(matching_posts[0]["title"], "Search")
+
+    @patch("requests.get")
+    def test_search_posts_by_title_api_error(self, mock_get):
+        mock_get.return_value.status_code = 500
+        mock_get.return_value.json.return_value = [
+            {"userId": 1, "id": 1, "title": "Test", "body": "Body 1"},
+            {"userId": 3, "id": 2, "title": "Search", "body": "Body 2"},
+            {"userId": 1, "id": 3, "title": "sEarch ", "body": "Body 3"}
+        ]
+
+        matching_posts = search_posts_by_title("Search")
+        # check if any posts have been matched despite there being an error
+        self.assertEqual(len(matching_posts), 0)
 
 
 if __name__ == '__main__':
