@@ -55,25 +55,27 @@ def main():
     option = int(input("Select option number: "))
 
     if option == 1:
+        # get 10 random posts
         posts = random.sample(get_posts(), 10)
+        # display posts
         for post in posts:
             print(f"PostId: {post['id']}, Title: {post['title']}")
             continue
-
+        # select post to view
         post_id = int(input("Select ID of post you wish to view: "))
         post = select_post(post_id)
 
         if post:
             print(
                 f"\nAuthorID ID: {post['userId']}\nPost ID: {post['id']}\nTitle: {post['title']}\nBody: {post['body']}\n")
-
+            # view comments
             option_to_view_comment = int(input("Key in 1 if you wish to view the comments on this post: "))
             if option_to_view_comment == 1:
                 comments = view_post_comments(post_id)
                 print("\nComments:")
                 for comment in comments:
                     print(f"Name: {comment['name']}\nEmail: {comment['email']}\nBody: {comment['body']}\n")
-
+                # option to create comment
                 option_to_comment = int(input("Key in 1 if you wish to comment: "))
                 if option_to_comment == 1:
                     name = input("Enter your name: ")
