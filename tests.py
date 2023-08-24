@@ -3,7 +3,7 @@ import unittest
 import random
 import unittest
 from unittest.mock import patch
-from main import get_posts, select_post, view_post_comments, post_comment
+from main import get_posts, select_post, view_post_comments, post_comment, search_posts_by_title
 
 
 class TestAPIFeatures(unittest.TestCase):
@@ -82,6 +82,23 @@ class TestAPIFeatures(unittest.TestCase):
 
         result = post_comment(10, "Brian Wahome", "brian@gmail.com", "Nice post")
         self.assertTrue(result)
+
+    @patch("requests.get")
+    def test_search_posts_by_title(self, mock_get):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = [
+            {"userId": 1, "id": 1, "title": "Test", "body": "Body 1"},
+            {"userId": 3, "id": 2, "title": "Search", "body": "Body 2"},
+            {"userId": 1, "id": 3, "title": "sEarch ", "body": "Body 3"}
+        ]
+
+        matching_posts = search_posts_by_title("Search")
+        # Check if any post has been matched
+        self.assertIsNotNone(matching_posts)
+        # Check if number of posts matched is similar to what is expected
+        self.assertEqual(len(matching_posts), 2)
+        # Check if titles are similar
+        self.assertEqual(matching_posts[0]["title"], "Search")
 
 
 if __name__ == '__main__':
