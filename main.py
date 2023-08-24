@@ -1,4 +1,5 @@
 import requests
+import random
 
 API_URL = "https://jsonplaceholder.typicode.com"
 
@@ -46,3 +47,94 @@ def search_posts_by_title(title):
     return matching_posts
 
 
+def main():
+    print("Welcome to the Ecobee blog!")
+    print("Choose an option from the list below: ")
+    print("1. View posts")
+    print("2. Search for post")
+    print("3. Exit application")
+    option = int(input("Select option number: "))
+
+    if option == 1:
+        # get 10 random posts
+        posts = random.sample(get_posts(), 10)
+        # display posts
+        for post in posts:
+            print(f"PostId: {post['id']}, Title: {post['title']}")
+            continue
+        # select post to view
+        post_id = int(input("Select ID of post you wish to view: "))
+        post = select_post(post_id)
+
+        if post:
+            print(
+                f"\nAuthorID ID: {post['userId']}\nPost ID: {post['id']}\nTitle: {post['title']}\nBody: {post['body']}\n")
+            # view comments
+            option_to_view_comment = int(input("Key in 1 if you wish to view the comments on this post: "))
+            if option_to_view_comment == 1:
+                comments = view_post_comments(post_id)
+                print("\nComments:")
+                for comment in comments:
+                    print(f"Name: {comment['name']}\nEmail: {comment['email']}\nBody: {comment['body']}\n")
+            # option to create comment
+            option_to_comment = int(input("Key in 1 if you wish to comment: "))
+            if option_to_comment == 1:
+                name = input("Enter your name: ")
+                email = input("Enter your email: ")
+                body = input("Enter your comment: ")
+                if post_comment(post_id, name, email, body):
+                    print("Comment posted successfully!")
+                else:
+                    print("Failed to post comment.")
+        else:
+            print(f"Post with ID {post_id} not found.")
+
+    elif option == 2:
+        # Search for posts by title
+        title = input("Enter a title or part of title to search for: ")
+        matching_posts = search_posts_by_title(title)
+        if matching_posts:
+            print("Matching Posts:")
+            for post in matching_posts:
+                print(f"Post ID: {post['id']}, Title: {post['title']}")
+                continue
+
+            # select post to view
+            post_id = int(input("Select ID of post you wish to view: "))
+            post = select_post(post_id)
+
+            if post:
+                print(
+                    f"\nAuthorID ID: {post['userId']}\nPost ID: {post['id']}\nTitle: {post['title']}\nBody: {post['body']}\n")
+                # view comments
+                option_to_view_comment = int(input("Key in 1 if you wish to view the comments on this post: "))
+                if option_to_view_comment == 1:
+                    comments = view_post_comments(post_id)
+                    print("\nComments:")
+                    for comment in comments:
+                        print(f"Name: {comment['name']}\nEmail: {comment['email']}\nBody: {comment['body']}\n")
+                # option to create comment
+                option_to_comment = int(input("Key in 1 if you wish to comment: "))
+                if option_to_comment == 1:
+                    name = input("Enter your name: ")
+                    email = input("Enter your email: ")
+                    body = input("Enter your comment: ")
+                    if post_comment(post_id, name, email, body):
+                        print("Comment posted successfully!")
+                    else:
+                        print("Failed to post comment.")
+            else:
+                print(f"Post with ID {post_id} not found.")
+        else:
+            print("No matching posts found.")
+
+    elif option == 3:
+        print("Exited app successfully")
+        global running
+        running = False
+
+
+if __name__ == "__main__":
+    running = True
+    while running:
+        main()
