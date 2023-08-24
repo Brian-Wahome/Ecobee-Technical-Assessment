@@ -3,7 +3,7 @@ import unittest
 import random
 import unittest
 from unittest.mock import patch
-from main import get_posts, select_post, view_post_comments
+from main import get_posts, select_post, view_post_comments, post_comment
 
 
 class TestAPIFeatures(unittest.TestCase):
@@ -64,8 +64,8 @@ class TestAPIFeatures(unittest.TestCase):
     def test_view_post_comments(self, mock_get):
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = [{"postId": 1, "id": 1, "Text": "Text 1", },
-                                      {"postId": 1, "id": 2, "Text": "Text 2", },
-                                      {"postId": 3, "id": 3, "Text": "Text 3", }]
+                                                   {"postId": 1, "id": 2, "Text": "Text 2", },
+                                                   {"postId": 3, "id": 3, "Text": "Text 3", }]
 
         result = view_post_comments(1)
 
@@ -75,6 +75,13 @@ class TestAPIFeatures(unittest.TestCase):
         self.assertEqual(result[0]['postId'], 1)
         self.assertEqual(result[1]['postId'], 1)
         self.assertEqual(result[2]['postId'], 3)
+
+    @patch("requests.post")
+    def test_post_comment(self, mock_post):
+        mock_post.return_value.status_code = 201
+
+        result = post_comment(10, "Brian Wahome", "brian@gmail.com", "Nice post")
+        self.assertTrue(result)
 
 
 if __name__ == '__main__':
