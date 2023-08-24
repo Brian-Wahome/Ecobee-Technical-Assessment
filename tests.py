@@ -45,8 +45,15 @@ class TestAPIFeatures(unittest.TestCase):
             {"userId": 9, "id": 9, "title": "Title 9", "body": "Body 9"},
             {"userId": 10, "id": 10, "title": "Title 10", "body": "Body 10"}
         ]
+        expected_result_2 = [
+            {"userId": 1, "id": 1, "title": "Title 1", "body": "Body 1"},
+            {"userId": 2, "id": 2, "title": "Title 2", "body": "Body 2"},
+            {"userId": 3, "id": 3, "title": "Title 3", "body": "Body 3"}
+        ]
         # expected_result = mock_response
         self.assertEqual(result, expected_result)
+        #check if output is not similar
+        self.assertNotEqual(result, expected_result_2, "Items with different output expected but items have similar output")
 
     @patch("requests.get")
     def test_select_post(self, mock_get):
