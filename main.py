@@ -52,6 +52,7 @@ def main():
     print("Choose an option from the list below: ")
     print("1. View posts")
     print("2. Search for post")
+    print("3. Exit application")
     option = int(input("Select option number: "))
 
     if option == 1:
@@ -127,6 +128,13 @@ def main():
         else:
             print("No matching posts found.")
 
+    elif option == 3:
+        print("Exited app successfully")
+        global running
+        running = False
+
 
 if __name__ == "__main__":
-    main()
+    running = True
+    while running:
+        main()
